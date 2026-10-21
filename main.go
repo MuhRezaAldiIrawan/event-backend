@@ -2,9 +2,8 @@ package main
 
 import (
 	"event-backend/config"
-	"event-backend/models"
+	"event-backend/controllers"
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -18,52 +17,19 @@ func main() {
 	}
 
 	config.ConnectDatabase()
-	
+
 	server := gin.Default()
 
 	// Define routes
 	api := server.Group("/api/v1")
 	{
-		api.GET("/events", getEvents)
-		api.POST("/events", createEvents)
+		api.GET("/events", controllers.GetEvents)
+		api.POST("/events", controllers.CreateEvent)
+		api.GET("/events/:id", controllers.GetEventByID)
+		api.PUT("/events/:id", controllers.UpdateEvent)
+		api.DELETE("/events/:id", controllers.DeleteEvent)
 	}
 
 	// Start the server on port 8080
 	server.Run(":8080")
-}
-
-func mainHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Server is running!",
-	})
-}
-
-func getEvents(c *gin.Context) {
-	events := models.ShowEvents()
-
-	c.JSON(http.StatusOK, gin.H{
-		"events": events,
-	})
-}
-
-func createEvents(c *gin.Context) {
-	var event models.Event
-
-	err := c.ShouldBindJSON(&event)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Could not parse request body",
-			"error":   err.Error(),
-		})
-		return
-	}
-
-	// Save the event to the in-memory slice
-	event.AddEvent()
-
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "Event created successfully",
-		"event":   event,
-	})
-
 }
