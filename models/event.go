@@ -7,11 +7,11 @@ import (
 )
 
 type Event struct {
-	Name        string    `json:"Name" binding:"required"`
-	Description string    `json:"Description" binding:"required"`
-	Location    string    `json:"Location" binding:"required"`
-	EventDate   time.Time `json:"EventDate" binding:"required"`
-	UserId      int       `json:"UserId" binding:"required"`
-	User        User      `gorm:"foreignKey:UserId" json:"User"`
 	gorm.Model
+	Name        string    `json:"name" binding:"required"`
+	Description string    `json:"description" binding:"required"`
+	Location    string    `json:"location" binding:"required"`
+	EventDate   time.Time `json:"event_date" binding:"required"`
+	UserID      uint      `json:"user_id" binding:"required"`
+	User        User      `gorm:"foreignKey:UserID;references:ID" json:"-" binding:"-"`
 }

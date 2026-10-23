@@ -17,7 +17,11 @@ func CreateEvent(c *gin.Context) {
 		return
 	}
 
-	config.DB.Create(&event)
+	if err := config.DB.Create(&event).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Event created successfully",
 		"data":    event})
