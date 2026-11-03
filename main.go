@@ -31,7 +31,7 @@ func main() {
 		api.PUT("/events/:id", controllers.UpdateEvent)
 		api.DELETE("/events/:id", controllers.DeleteEvent)
 
-		// user routes test
+		// user routes tests
 		api.POST("/register", controllers.RegisterUser)
 	}
 
